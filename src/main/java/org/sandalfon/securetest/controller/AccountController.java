@@ -2,12 +2,13 @@ package org.sandalfon.securetest.controller;
 
 import org.sandalfon.securetest.entity.Account;
 import org.sandalfon.securetest.repository.AccountRepository;
+import org.sandalfon.securetest.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,18 +20,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class AccountController {
+public class AccountController implements AccountService{
 	@Autowired private AccountRepository accountRepository;
 	@Autowired private PasswordEncoder passwordEncoder;
 
-  
-	
 	@Bean
 	PasswordEncoder getEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+	
 
-	@PostMapping("/account")
+	@Override
+	@PostMapping("netheos/account")
+	public
 	ResponseEntity<?> onPostAccount(
 			@RequestParam("username") String username,
 			@RequestParam("password") String password,
@@ -46,7 +48,7 @@ public class AccountController {
 
 	}
 
-	@RequestMapping(method = RequestMethod.GET,
+	/*@RequestMapping(method = RequestMethod.GET,
 			value = "/account", 
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public  ResponseEntity<?> getAllAccounts(Pageable pageable,
@@ -61,12 +63,19 @@ public class AccountController {
 
 		}
 		return new ResponseEntity<>(accountRepository.findById(account.getId()), HttpStatus.OK);
+	}*/
+
+	@RequestMapping(method = RequestMethod.GET,
+	value = "netheos/account", 
+	produces = MediaType.APPLICATION_JSON_VALUE)
+	public  ResponseEntity<?> getAllAccounts(){
+		return new ResponseEntity<>(accountRepository.findAll(), HttpStatus.OK);
+		
 	}
 
 
-
 	@RequestMapping(method = RequestMethod.GET,
-			value = "/account/{accountId}", 
+			value = "netheos/account/{accountId}", 
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public  ResponseEntity<?>onGetAccount(@PathVariable Long accountId,
 			Authentication auth) {
@@ -78,7 +87,7 @@ public class AccountController {
 		if(account == null)
 			return new ResponseEntity<>(null, HttpStatus.OK);
 		System.out.println(accountAuth.toString());
-		if ("ADMIN".equals(accountAuth.getRole())) {
+		if ("ROLE_ADMIN".equals(accountAuth.getRole())) {
 			return new ResponseEntity<>(account, HttpStatus.OK);
 
 		}

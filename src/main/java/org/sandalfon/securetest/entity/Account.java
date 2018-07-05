@@ -85,4 +85,14 @@ public class Account {
 		hash = 31 * hash + Objects.hashCode(getRole());
 		return hash;
 	}
+	
+	
+	/*public boolean isAdmin() {
+		return role.equals("ROLE_ADMIN");
+	}
+	
+	public boolean isUser() {
+		return role.equals("ROLE_USER");
+	}*/
+	
 }
