@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,22 +47,6 @@ public class AccountController implements AccountService{
 
 	}
 
-	/*@RequestMapping(method = RequestMethod.GET,
-			value = "/account", 
-			produces = MediaType.APPLICATION_JSON_VALUE)
-	public  ResponseEntity<?> getAllAccounts(Pageable pageable,
-			Authentication auth) {
-		System.out.println("*****account******");
-		Account account = accountRepository.findByUsername(auth.getName());
-		if(account == null)
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		System.out.println(account.toString());
-		if ("ADMIN".equals(account.getRole())) {
-			return new ResponseEntity<>(accountRepository.findAll(pageable), HttpStatus.OK);
-
-		}
-		return new ResponseEntity<>(accountRepository.findById(account.getId()), HttpStatus.OK);
-	}*/
 
 	@RequestMapping(method = RequestMethod.GET,
 	value = "netheos/account", 
@@ -93,7 +76,7 @@ public class AccountController implements AccountService{
 		}
 		if(account.getId() == accountAuth.getId())
 			return new ResponseEntity<>(account, HttpStatus.OK);
-		return new ResponseEntity<>(null, HttpStatus.OK);
+		return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
 	}
 
 
